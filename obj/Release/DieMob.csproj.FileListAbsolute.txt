@@ -1,0 +1,8 @@
+C:\Terraria-Server-Master\#### PLUGINS ####\1.3.0.7.9\DieMob.dll\obj\Release\DieMob.csprojAssemblyReference.cache
+C:\Terraria-Server-Master\#### PLUGINS ####\1.3.0.7.9\DieMob.dll\obj\Release\DieMob.csproj.CoreCompileInputs.cache
+C:\Terraria-Server-Master\#### PLUGINS ####\1.3.0.7.9\DieMob.dll\obj\Release\DieMob.csproj.CopyComplete
+C:\Terraria-Server-Master\#### PLUGINS ####\1.3.0.7.9\DieMob.dll\obj\Release\DieMob.dll
+C:\Terraria-Server-Master\#### PLUGINS ####\1.3.0.7.9\DieMob.dll\obj\Release\DieMob.pdb
+C:\Terraria-Server-Master\#### PLUGINS ####\1.3.0.7.9\DieMob.dll\bin\DieMob.dll
+C:\Terraria-Server-Master\#### PLUGINS ####\1.3.0.7.9\DieMob.dll\bin\DieMob.pdb
+C:\Terraria-Server-Master\#### PLUGINS ####\1.3.0.7.9\DieMob.dll\bin\Newtonsoft.Json.dll

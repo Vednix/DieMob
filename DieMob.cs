@@ -227,9 +227,9 @@ namespace DieMob
 							if (Main.npc[i].active)
 							{
 								NPC npc = Main.npc[i];
-								if ((npc.friendly && Region.AffectFriendlyNPCs && npc.netID != 488) ||
-                                    (!npc.friendly && npc.SpawnedFromStatue && Region.AffectStatueSpawns && npc.netID != 488 && npc.catchItem == 0) ||
-                                    (!npc.friendly && !npc.SpawnedFromStatue && npc.netID != 488 && npc.catchItem == 0))
+								if (npc.friendly && Region.AffectFriendlyNPCs && npc.netID != 488) /*||*/
+                                    //(!npc.friendly && npc.SpawnedFromStatue && Region.AffectStatueSpawns && npc.netID != 488 && npc.catchItem == 0) ||
+                                    //(!npc.friendly && !npc.SpawnedFromStatue && npc.netID != 488 && npc.catchItem == 0))
 								{
 									if (Region.TSRegion.InArea((int)(Main.npc[i].position.X / 16), (int)(Main.npc[i].position.Y / 16)))
 									{
