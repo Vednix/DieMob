@@ -182,7 +182,7 @@ namespace DieMob
 				}
 				else
 				{
-					TShock.Log.ConsoleError("DieMob config not found. Creating new one");
+					TShock.Log.ConsoleError("[DieMob] Configuração não encontrada. Criando uma nova");
 					CreateConfig();
 					return false;
 				}
@@ -279,9 +279,9 @@ namespace DieMob
 			if (args.Parameters.Count > 0 && args.Parameters[0].ToLower() == "reload")
 			{
 				if (ReadConfig())
-					args.Player.SendMessage("DieMob config reloaded.", Color.BurlyWood);
+					args.Player.SendMessage("[DieMob] Configuração recarregada.", Color.BurlyWood);
 				else
-					args.Player.SendErrorMessage("Error reading config. Check log for details.");
+					args.Player.SendErrorMessage("[DieMob] Erro recarregando o arquivo de configuração.");
 				return;
 			}
 			else if (args.Parameters.Count > 0 && args.Parameters[0].ToLower() == "list")
@@ -301,7 +301,7 @@ namespace DieMob
 				if (args.Parameters.Count < 2)
 					pageNumber = 1;
 				else if (!int.TryParse(args.Parameters[1], out pageNumber))
-					args.Player.SendErrorMessage("Invalid syntax! Proper syntax: {0}dm list <page number>", (args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier));
+					args.Player.SendErrorMessage("[DieMob] Uso correto: {0}diemob list <página>", (args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier));
 
 				if (!PaginationTools.TryParsePageNumber(args.Parameters, 1, args.Player, out pageNumber))
 				{
@@ -315,8 +315,8 @@ namespace DieMob
 				PaginationTools.SendPage(args.Player, pageNumber, PaginationTools.BuildLinesFromTerms(Regions),
 					new PaginationTools.Settings
 					{
-						HeaderFormat = "DieMob Regions ({0}/{1}):",
-						FooterFormat = "Type /dm list {0} for more."
+						HeaderFormat = "Regiões do DieMob ({0}/{1}):",
+						FooterFormat = "Digite /diemob list {0} para ver mais."
 					});
 				return;
 			}
@@ -324,14 +324,14 @@ namespace DieMob
 			{
 				DieMobRegion reg = GetRegionByName(args.Parameters[1]);
 				if (reg == null)
-					args.Player.SendMessage(String.Format("Region {0} not found on DieMob list", args.Parameters[1]), Color.Red);
+					args.Player.SendMessage(String.Format("[DieMob] Região {0} não encontrada na lista", args.Parameters[1]), Color.Red);
 				else
 				{
-					args.Player.SendMessage(String.Format("DieMob region: {0}", reg.TSRegion.Name), Color.DarkOrange);
-					args.Player.SendMessage(String.Format("Type: {0}", reg.Type.ToString()), Color.LightSalmon);
-					args.Player.SendMessage(String.Format("Affects friendly NPCs: {0}", reg.AffectFriendlyNPCs ? "True" : "False"), Color.LightSalmon);
-					args.Player.SendMessage(String.Format("Affects statue spawned mobs: {0}", reg.AffectStatueSpawns ? "True" : "False"), Color.LightSalmon);
-					args.Player.SendMessage(String.Format("Replacing {0} mobs. Type '{1}dm replacemobsinfo RegionName [pageNum]' to get a list.", reg.ReplaceMobs.Count, (args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier)), Color.LightSalmon);
+					args.Player.SendMessage(String.Format("Região do DieMob: {0}", reg.TSRegion.Name), Color.DarkOrange);
+					args.Player.SendMessage(String.Format("Tipo: {0}", reg.Type.ToString()), Color.LightSalmon);
+					args.Player.SendMessage(String.Format("Afeta NPCs amigos: {0}", reg.AffectFriendlyNPCs ? "Sim" : "Não"), Color.LightSalmon);
+					args.Player.SendMessage(String.Format("Afeta NPCs invocados através de Estatuas: {0}", reg.AffectStatueSpawns ? "Sim" : "Não"), Color.LightSalmon);
+					args.Player.SendMessage(String.Format("Substituindo {0} mobs. Digite '{1}dm replacemobsinfo NomeDaRegião [Página]' para ver a lista de mobs.", reg.ReplaceMobs.Count, (args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier)), Color.LightSalmon);
 				}
 				return;
 			}
@@ -339,7 +339,7 @@ namespace DieMob
 			{
 				DieMobRegion reg = GetRegionByName(args.Parameters[1]);
 				if (reg == null)
-					args.Player.SendErrorMessage("Region {0} not found on DieMob list", args.Parameters[1]);
+					args.Player.SendErrorMessage("[DieMob] Região {0} não encontrada", args.Parameters[1]);
 				else
 				{
 					int page = 0;
@@ -348,13 +348,13 @@ namespace DieMob
 					if (page <= 0)
 						page = 1;
 					int startIndex = (page - 1) * 6;
-					args.Player.SendMessage(String.Format("{0} mob replacements page {1}:", reg.TSRegion.Name, page), Color.LightSalmon);
+					args.Player.SendMessage(String.Format("[DieMob] {0} mob em substituição: página {1}:", reg.TSRegion.Name, page), Color.LightSalmon);
 					for (int i = startIndex; i < reg.ReplaceMobs.Count; i++)
 					{
 						if (i < startIndex + 6)
 						{
 							int key = reg.ReplaceMobs.Keys.ElementAt(i);
-							args.Player.SendMessage(String.Format("[{0}] From: {1}  To: {2}", i + 1, key, reg.ReplaceMobs[key]), Color.BurlyWood);
+							args.Player.SendMessage(String.Format("[{0}] Antes: {1}  Depois: {2}", i + 1, key, reg.ReplaceMobs[key]), Color.BurlyWood);
 						}
 					}
 				}
@@ -367,7 +367,7 @@ namespace DieMob
 					DieMobRegion region = GetRegionByName(args.Parameters[1]);
 					if (region == null)
 					{
-						args.Player.SendErrorMessage("Region {0} not found on DieMob list", args.Parameters[1]);
+						args.Player.SendErrorMessage("[DieMob] Região {0} não encontrada", args.Parameters[1]);
 						return;
 					}
 					if (args.Parameters.Count > 2)
@@ -382,17 +382,17 @@ namespace DieMob
 										if (args.Parameters[3].ToLower() == "repel")
 										{
 											region.Type = RegionType.Repel;
-											args.Player.SendMessage(String.Format("Region {0} is now repeling mobs", region.TSRegion.Name), Color.LightSalmon);
+											args.Player.SendMessage(String.Format("[DieMob] A região {0} agora irá repelir os mobs", region.TSRegion.Name), Color.LightSalmon);
 										}
 										else if (args.Parameters[3].ToLower() == "passive")
 										{
 											region.Type = RegionType.Passive;
-											args.Player.SendMessage(String.Format("Region {0} is now passive", region.TSRegion.Name), Color.LightSalmon);
+											args.Player.SendMessage(String.Format("[DieMob] A região {0} agora irá atuar com passiva", region.TSRegion.Name), Color.LightSalmon);
 										}
 										else
 										{
 											region.Type = RegionType.Kill;
-											args.Player.SendMessage(String.Format("Region {0} is now killing mobs", region.TSRegion.Name), Color.LightSalmon);
+											args.Player.SendMessage(String.Format("[DieMob] A região {0} agora irá matar os mobs", region.TSRegion.Name), Color.LightSalmon);
 										}
 										Diemob_Update(region);
 										return;
@@ -406,13 +406,13 @@ namespace DieMob
 										if (args.Parameters[3].ToLower() == "true")
 										{
 											region.AffectFriendlyNPCs = true;
-											args.Player.SendMessage(String.Format("Region {0} is now affecting friendly NPCs", region.TSRegion.Name),
+											args.Player.SendMessage(String.Format("[DieMob] A Região {0} agora afeta NPCs amigos", region.TSRegion.Name),
 												Color.LightSalmon);
 										}
 										else
 										{
 											region.AffectFriendlyNPCs = false;
-											args.Player.SendMessage(String.Format("Region {0} is no longer affecting friendly NPCs", region.TSRegion.Name),
+											args.Player.SendMessage(String.Format("[DieMob] A Região {0} agora não afeta mais NPCs amigos", region.TSRegion.Name),
 												Color.LightSalmon);
 										}
 										Diemob_Update(region);
@@ -427,13 +427,13 @@ namespace DieMob
 										if (args.Parameters[3].ToLower() == "true")
 										{
 											region.AffectStatueSpawns = true;
-											args.Player.SendMessage(String.Format("Region {0} is now affecting statue spawned mobs", region.TSRegion.Name),
+											args.Player.SendMessage(String.Format("[DieMob] A Região {0} agora afeta a invocação de mobs por estátuas", region.TSRegion.Name),
 												Color.LightSalmon);
 										}
 										else
 										{
 											region.AffectStatueSpawns = false;
-											args.Player.SendMessage(String.Format("Region {0} is no longer affecting statue spawned mobs", region.TSRegion.Name),
+											args.Player.SendMessage(String.Format("[DieMob] A Região {0} agora não afeta a invocação de mobs por estátuas", region.TSRegion.Name),
 												Color.LightSalmon);
 										}
 										Diemob_Update(region);
@@ -452,12 +452,12 @@ namespace DieMob
 										{
 											if (region.ReplaceMobs.ContainsKey(fromMobID))
 											{
-												args.Player.SendMessage(String.Format("Region {0} already is already converting mobID {1} to mob {2}",
+												args.Player.SendMessage(String.Format("[DieMob] A Região {0} já está convertendo o mob {1} em {2}",
 													region.TSRegion.Name, fromMobID, region.ReplaceMobs[fromMobID]), Color.LightSalmon);
 												return;
 											}
 											region.ReplaceMobs.Add(fromMobID, toMobID);
-											args.Player.SendMessage(String.Format("Region {0} is now converting mobs with id {1} to mobs {2}", region.TSRegion.Name,
+											args.Player.SendMessage(String.Format("[DieMob] A Região {0} agora está convertendo o mob {1} em {2}", region.TSRegion.Name,
 												fromMobID, toMobID), Color.LightSalmon);
 											Diemob_Update(region);
 											return;
@@ -466,7 +466,7 @@ namespace DieMob
 										{
 											if (region.ReplaceMobs.ContainsKey(fromMobID))
 												region.ReplaceMobs.Remove(fromMobID);
-											args.Player.SendMessage(String.Format("Region {0} is no longer converting mobs with id {1}", region.TSRegion.Name, fromMobID),
+											args.Player.SendMessage(String.Format("[DieMob] A Região {0} agora não está mais convertendo mob com a ID {1}", region.TSRegion.Name, fromMobID),
 												Color.LightSalmon);
 											Diemob_Update(region);
 											return;
@@ -477,9 +477,9 @@ namespace DieMob
 						}
 					}
 				}
-				args.Player.SendMessage("{0}dm mod RegionName option arguments".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.DarkOrange);
-				args.Player.SendMessage("Options:", Color.LightSalmon);
-				args.Player.SendMessage("type - args: kill [default] / repel / passive", Color.LightSalmon);
+				args.Player.SendMessage("{0}dm mod NomeDaRegião Opção Argumentos".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.DarkOrange);
+				args.Player.SendMessage("Opções:", Color.LightSalmon);
+				args.Player.SendMessage("Tipo - args: kill [default] / repel / passive", Color.LightSalmon);
 				args.Player.SendMessage("affectfriendlynpcs - args: true / false [default]", Color.LightSalmon);
 				args.Player.SendMessage("affectstatuespawns - args: true / false [default]", Color.LightSalmon);
 				args.Player.SendMessage("replacemobs - args: add fromMobID toMobID / del fromMobID", Color.LightSalmon);
@@ -494,42 +494,42 @@ namespace DieMob
 					{
 						if (RegionList.Select(r => r.TSRegion).Contains(region))
 						{
-							args.Player.SendMessage(String.Format("Region '{0}' is already on the DieMob list", region.Name), Color.LightSalmon);
+							args.Player.SendMessage(String.Format("[DieMob] A Região '{0}' já está na lista", region.Name), Color.LightSalmon);
 							return;
 						}
 						if (!DieMob_Add(region.Name))
 						{
-							args.Player.SendErrorMessage("Error adding '{0}' to DieMob list. Check log for details", region.Name);
+							args.Player.SendErrorMessage("[DieMob] Erro ao adicionar '{0}' a lista.", region.Name);
 							return;
 						}
                         RegionList.Add(new DieMobRegion(region));
-						args.Player.SendMessage(String.Format("Region '{0}' added to DieMob list", region.Name), Color.BurlyWood);
+						args.Player.SendMessage(String.Format("[DieMob] A Região '{0}' foi adicionada a lista", region.Name), Color.BurlyWood);
 						return;
 					}
 					else if (args.Parameters[0].ToLower() == "del")
 					{
 						if (!RegionList.Exists(r => r.TSRegion.Name == region.Name))
 						{
-							args.Player.SendMessage(String.Format("Region '{0}' is not on the DieMob list", region.Name), Color.LightSalmon);
+							args.Player.SendMessage(String.Format("[DieMob] A Região '{0}' não está na lista", region.Name), Color.LightSalmon);
 							return;
 						}
 						DieMob_Delete(region.Name);
-						args.Player.SendMessage(String.Format("Region '{0}' deleted from DieMob list", region.Name), Color.BurlyWood);
+						args.Player.SendMessage(String.Format("[DieMob] A Região '{0}' foi excluída da lista", region.Name), Color.BurlyWood);
 						return;
 					}
 					return;
 				}
 				else
 				{
-					args.Player.SendErrorMessage($"Region '{args.Parameters[1]}' not found.");
+					args.Player.SendErrorMessage($"[DieMob] A Região '{args.Parameters[1]}' não foi encontrada.");
 					return;
 				}
 			}
-			args.Player.SendMessage("Syntax: {0}diemob [add | del] RegionName - Creates / Deletes DieMob region based on pre-existing region".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
-			args.Player.SendMessage("Syntax: {0}diemob list [page number] - Lists DieMob regions".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
-			args.Player.SendMessage("Syntax: {0}diemob reload - Reloads config.json file".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
-			args.Player.SendMessage("Syntax: {0}diemob mod RegionName - Modifies a DieMob region".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
-			args.Player.SendMessage("Syntax: {0}diemob info RegionName - Displays info for a DieMob region".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
+			args.Player.SendMessage("Syntax: {0}diemob [add | del] RegionName - Criar / Deleta uma Região baseada em uma Região existente".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
+			args.Player.SendMessage("Syntax: {0}diemob list [page number] - Lista as Regiões do DieMob".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
+			args.Player.SendMessage("Syntax: {0}diemob reload - Recarrega a config.json".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
+			args.Player.SendMessage("Syntax: {0}diemob mod RegionName - Modifica uma Região DieMob".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
+			args.Player.SendMessage("Syntax: {0}diemob info RegionName - Mostra informações sobre uma Região DieMob".SFormat(args.Silent ? TShock.Config.CommandSilentSpecifier : TShock.Config.CommandSpecifier), Color.LightSalmon);
 		}
 		private static void DieMob_Read()
 		{
